@@ -1,0 +1,54 @@
+{
+  "name": "koabana/framework",
+  "description": "Koabana PHP Framework",
+  "license": "proprietary",
+  "version": "0.0.1",
+  "autoload": {
+    "psr-4": {
+      "Koabana\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "authors": [
+    {
+      "name": "David LEGRAND",
+      "email": "contact@koabana.fr"
+    }
+  ],
+  "require": {
+    "php": ">=8.4",
+    "symfony/var-dumper": "^8.0",
+    "guzzlehttp/psr7": "^2.8",
+    "psr/http-message": "^2.0",
+    "php-di/php-di": "^7.1",
+    "psr/http-server-middleware": "^1.0",
+    "psr/http-server-handler": "^1.0",
+    "relay/relay": "^3.0",
+    "league/route": "^6.2",
+    "laminas/laminas-httphandlerrunner": "^2.13",
+    "vlucas/phpdotenv": "^5.6",
+    "monolog/monolog": "^3.10"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^12.5",
+    "phpstan/phpstan": "^2.1",
+    "friendsofphp/php-cs-fixer": "^3.92",
+    "filp/whoops": "^2.18",
+    "middlewares/whoops": "^2.1"
+  },
+  "scripts": {
+    "cs:fix": "php-cs-fixer fix --config=.php-cs-fixer.php",
+    "cs:check": "php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --diff",
+    "stan": "phpstan analyse --memory-limit=1G",
+    "test": "phpunit -c phpunit.xml",
+    "qa": [
+      "@cs:check",
+      "@stan",
+      "@test"
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+includes:
+  # - vendor/phpstan/phpstan-phpunit/extension.neon
+
+parameters:
+  level: 6
+  paths:
+    - src
+    - tests
+  tmpDir: var/phpstan
+  bootstrapFiles:
+    - vendor/autoload.php
+  excludePaths:
+    analyse:
+      - vendor/*
+      - var/*
+      - public/assets/*
+  phpVersion: 80417
