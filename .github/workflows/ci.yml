@@ -1,0 +1,71 @@
+name: CI PHP 8.4
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  composer-validate:
+    name: Composer validate
+    runs-on: ubuntu-latest
+    container:
+      image: cimg/php:8.4-node
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Composer validate (strict)
+        working-directory: /
+        run: composer validate --no-interaction
+
+  phpstan:
+    name: PHPStan (composer lint)
+    runs-on: ubuntu-latest
+    container:
+      image: cimg/php:8.4-node
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install deps
+        working-directory: /
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Run PHPStan via composer lint
+        working-directory: /
+        run: composer stan
+
+  cs-fixer:
+    name: CS-Fixer (composer fix)
+    runs-on: ubuntu-latest
+    container:
+      image: cimg/php:8.4-node
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install deps
+        working-directory: /
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Run CS-Fixer via composer fix:dry
+        working-directory: /
+        run: composer cs:check
+
+  tests:
+    name: PHPUnit (composer test)
+    runs-on: ubuntu-latest
+    container:
+      image: cimg/php:8.4-node
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install deps
+        working-directory: /
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Run tests via composer test
+        working-directory: /
+        run: composer test
+

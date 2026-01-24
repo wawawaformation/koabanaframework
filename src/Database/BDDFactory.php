@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Koabana\Database;
 
-use Dba\Connection;
-
-
-
+/**
+ * Usine de connexions à la base de données.
+ */
 class BDDFactory
 {
     /**
@@ -15,46 +14,33 @@ class BDDFactory
      */
     protected ?MyPDO $connection = null;
 
-   
     public function __construct() {}
 
-   
+    /**
+     * REtourne une connexion PDO à la BDD
+     *
+     * @throws \RuntimeException
+     */
     public function getConnection(): MyPDO
     {
+        $dsn = getenv('DB_DSN');
 
-
-      
-            $dsn = getenv('DB_DSN');
-            $user = getenv('DB_USER') ?: '';
-            $password = getenv('DB_PASSWORD') ?: '';
-
-
-            
-
-           
-
-            if($dsn === 'sqlite::memory:') {
-                $user = null;
-                $password = null;
-            }
-
-           
-            if(!$dsn || $dsn === '') {
-                throw new \RuntimeException('DSN de la base de données non configuré.');
-            }
-      
-
-        if($this->connection === null)
-        {
-          
-            $this->connection = new MyPDO($dsn, $user, $password);   
+        if (false === $dsn || '' === $dsn) {
+            throw new \RuntimeException('DSN de la base de données non configuré.');
         }
 
+        $user = getenv('DB_USER') ?: '';
+        $password = getenv('DB_PASSWORD') ?: '';
 
-        
+        if ('sqlite::memory:' === $dsn) {
+            $user = null;
+            $password = null;
+        }
+
+        if (null === $this->connection) {
+            $this->connection = new MyPDO($dsn, $user, $password);
+        }
 
         return $this->connection;
-       
-    }  
-    
+    }
 }

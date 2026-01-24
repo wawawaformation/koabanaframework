@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Koabana\Log;
 
+use Monolog\Handler\StreamHandler;
 use Monolog\Level;
 use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
 use Psr\Log\LoggerInterface;
 
 final class LoggerFactory

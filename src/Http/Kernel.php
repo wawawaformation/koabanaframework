@@ -4,22 +4,20 @@ declare(strict_types=1);
 
 namespace Koabana\Http;
 
+use Koabana\Http\Middleware\ErrorHandlerMiddleware;
 use League\Route\Router;
-use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Relay\Relay;
-use Koabana\Http\Middleware\ErrorHandlerMiddleware;
 
 final class Kernel implements RequestHandlerInterface
 {
     private Relay $relay;
 
     public function __construct(
-        
-        private readonly Router $router
+        private readonly Router $router,
     ) {
         $queue = [
             new ErrorHandlerMiddleware(),
@@ -30,7 +28,7 @@ final class Kernel implements RequestHandlerInterface
 
                 public function process(
                     ServerRequestInterface $request,
-                    RequestHandlerInterface $handler
+                    RequestHandlerInterface $handler,
                 ): ResponseInterface {
                     return $this->router->dispatch($request);
                 }

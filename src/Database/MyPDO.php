@@ -22,7 +22,7 @@ class MyPDO extends \PDO
     /**
      * Construit une connexion PDO et applique les attributs par défaut.
      *
-     * @param string $dsn DSN PDO (ex: mysql:..., sqlite:..., sqlite::memory:)
+     * @param string      $dsn      DSN PDO (ex: mysql:..., sqlite:..., sqlite::memory:)
      * @param null|string $username Nom d'utilisateur (si applicable)
      * @param null|string $password Mot de passe (si applicable)
      *
@@ -46,7 +46,7 @@ class MyPDO extends \PDO
             }
         } catch (\PDOException $e) {
             // Gestion personnalisée des erreurs de connexion PDO
-            throw new \PDOException('Échec de la connexion à la base de données : ' . $e->getMessage(), (int) $e->getCode(), $e);
+            throw new \PDOException('Échec de la connexion à la base de données : '.$e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 }

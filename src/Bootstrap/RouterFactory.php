@@ -10,25 +10,20 @@ use Psr\Container\ContainerInterface;
 
 final class RouterFactory
 {
-    /**
-     * @param ContainerInterface $container
-     * @param string $routesFile
-     * @return Router
-     */
     public static function create(ContainerInterface $container, string $routesFile): Router
     {
         $strategy = new ApplicationStrategy();
         $strategy->setContainer($container);
 
-        $router = new Router();      
-        $router->setStrategy($strategy); 
+        $router = new Router();
+        $router->setStrategy($strategy);
 
         /** @var array<int, array{0:string,1:string,2:mixed}> $routes */
         $routes = require $routesFile;
 
         foreach ($routes as $route) {
             [$method, $path, $handler] = $route;
-            $router->map($method, $path, $handler); 
+            $router->map($method, $path, $handler);
         }
 
         return $router;

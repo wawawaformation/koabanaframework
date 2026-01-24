@@ -1,44 +1,38 @@
 <?php
 
-
 /**
- *
- * Front controller du framework Koabana 
+ * Front controller du framework Koabana
  */
-
 
 declare(strict_types=1);
 
+use Dotenv\Dotenv;
 use GuzzleHttp\Psr7\ServerRequest;
-use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Koabana\Bootstrap\ContainerFactory;
 use Koabana\Bootstrap\RouterFactory;
 use Koabana\Http\Kernel;
-use Dotenv\Dotenv;
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Monolog\ErrorHandler;
 use Psr\Log\LoggerInterface;
 
-require dirname(__DIR__) . '/vendor/autoload.php';
-
+require dirname(__DIR__).'/vendor/autoload.php';
 
 // Chargement des variables d'environnement depuis le fichier .env
 $dotenv = Dotenv::createImmutable(dirname(__DIR__));
-$dotenv->load();  
+$dotenv->load();
 foreach ($_ENV as $k => $v) {
-    putenv("$k=$v");
+    putenv("{$k}={$v}");
 }
 
-
 // Création du conteneur de dépendances
-$container = ContainerFactory::create(dirname(__DIR__) . '/config/containers.php');
+$container = ContainerFactory::create(dirname(__DIR__).'/config/containers.php');
 
 // Enregistrement du gestionnaire d'erreurs avec le logger
 $logger = $container->get(LoggerInterface::class);
 ErrorHandler::register($logger);
 
 // Création du routeur à partir des définitions de routes
-$router = RouterFactory::create($container, dirname(__DIR__) . '/config/routes.php');
-
+$router = RouterFactory::create($container, dirname(__DIR__).'/config/routes.php');
 
 // Création du noyau HTTP de l'application
 $kernel = new Kernel($router);
@@ -47,6 +41,5 @@ $kernel = new Kernel($router);
 $request = ServerRequest::fromGlobals();
 $response = $kernel->handle($request);
 
-
 // Envoi de la réponse HTTP au client
-(new SapiEmitter())->emit($response);
+new SapiEmitter()->emit($response);
