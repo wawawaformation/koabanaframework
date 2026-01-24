@@ -1,71 +1,35 @@
-name: CI PHP 8.4
+name: CI
 
 on:
   push:
   pull_request:
 
 jobs:
-  composer-validate:
-    name: Composer validate
+  test:
     runs-on: ubuntu-latest
-    container:
-      image: cimg/php:8.4-node
+    env:
+      APP_ENV: test
+      APP_DEBUG: "0"
+      DB_DSN: "sqlite::memory:"
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Composer validate (strict)
-        working-directory: /
-        run: composer validate --no-interaction
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: pdo_sqlite
+          coverage: none
 
-  phpstan:
-    name: PHPStan (composer lint)
-    runs-on: ubuntu-latest
-    container:
-      image: cimg/php:8.4-node
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: ramsey/composer-install@v3
 
-      - name: Install deps
-        working-directory: /
-        run: composer install --no-interaction --prefer-dist --no-progress
+      - name: Prepare writable dirs
+        run: mkdir -p var/log
 
-      - name: Run PHPStan via composer lint
-        working-directory: /
-        run: composer stan
+      - name: PHPStan
+        run: vendor/bin/phpstan analyse
 
-  cs-fixer:
-    name: CS-Fixer (composer fix)
-    runs-on: ubuntu-latest
-    container:
-      image: cimg/php:8.4-node
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: PHPUnit
+        run: vendor/bin/phpunit
 
-      - name: Install deps
-        working-directory: /
-        run: composer install --no-interaction --prefer-dist --no-progress
-
-      - name: Run CS-Fixer via composer fix:dry
-        working-directory: /
-        run: composer cs:check
-
-  tests:
-    name: PHPUnit (composer test)
-    runs-on: ubuntu-latest
-    container:
-      image: cimg/php:8.4-node
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install deps
-        working-directory: /
-        run: composer install --no-interaction --prefer-dist --no-progress
-
-      - name: Run tests via composer test
-        working-directory: /
-        run: composer test
-
+      - name: CS-Fixer
+        run: vendor/bin/php-cs-fixer fix --dry-run --diff
