@@ -65,6 +65,8 @@ class Svg
      *
      * @param string $path Chemin vers le fichier SVG
      *
+     * @return void
+     *
      * @throws \InvalidArgumentException si le fichier n'existe pas, n'est pas lisible, est vide,
      *                                   ou n'est pas un SVG valide
      */
@@ -113,6 +115,7 @@ class Svg
 
         // Aria existants
         foreach ($svgNode->attributes as $attr) {
+            /** @var \DOMAttr $attr */
             if (str_starts_with($attr->name, 'aria-')) {
                 $this->ariaAttributes[$attr->name] = $attr->value;
             }
@@ -135,6 +138,8 @@ class Svg
     /**
      * Vide les attributs gérés par cette classe (classes, role, aria, fill).
      * Ne modifie pas le contenu interne (paths, groups, etc.).
+     *
+     * @return $this
      */
     public function clear(): self
     {
@@ -193,6 +198,7 @@ class Svg
 
         $toRemove = [];
         foreach ($svgNode->attributes as $attr) {
+            /** @var \DOMAttr $attr */
             if (str_starts_with($attr->name, 'aria-')) {
                 $toRemove[] = $attr->name;
             }
@@ -271,6 +277,8 @@ class Svg
      * Ajoute une classe CSS au SVG (sans doublon).
      *
      * @param string $class Classe CSS à ajouter (ex: "icon", "icon-lg")
+     *
+     * @return $this
      */
     public function addClass(string $class): self
     {
@@ -287,6 +295,8 @@ class Svg
      * Supprime une classe CSS du SVG.
      *
      * @param string $class Classe CSS à supprimer
+     *
+     * @return $this
      */
     public function removeClass(string $class): self
     {
@@ -302,6 +312,8 @@ class Svg
 
     /**
      * Vide la liste des classes CSS.
+     *
+     * @return $this
      */
     public function clearClasses(): self
     {
@@ -319,6 +331,8 @@ class Svg
      *
      * @param string $name  Nom de l'attribut (ex: "hidden" ou "aria-hidden")
      * @param string $value Valeur (ex: "true", "false", "Fermer")
+     *
+     * @return $this
      */
     public function setAriaAttribute(string $name, string $value): self
     {
@@ -332,6 +346,8 @@ class Svg
      * Supprime un attribut aria-*.
      *
      * @param string $name Nom de l'attribut (ex: "hidden" ou "aria-hidden")
+     *
+     * @return $this
      */
     public function removeAriaAttribute(string $name): self
     {
@@ -346,6 +362,8 @@ class Svg
 
     /**
      * Vide la liste des attributs aria-*.
+     *
+     * @return $this
      */
     public function clearAriaAttributes(): self
     {
@@ -358,6 +376,8 @@ class Svg
      * Définit l'attribut fill du SVG (uniquement sur <svg>).
      *
      * @param string $fill Valeur CSS (ex: "red", "#ff0000", "currentColor")
+     *
+     * @return $this
      */
     public function setFill(string $fill): self
     {
@@ -368,6 +388,8 @@ class Svg
 
     /**
      * Supprime l'attribut fill.
+     *
+     * @return $this
      */
     public function removeFill(): self
     {
@@ -380,6 +402,8 @@ class Svg
      * Définit le rôle du SVG.
      *
      * @param null|string $role Rôle (ex: "img"). Null supprime le rôle.
+     *
+     * @return $this
      */
     public function setRole(?string $role): self
     {
@@ -390,6 +414,8 @@ class Svg
 
     /**
      * Supprime le rôle du SVG.
+     *
+     * @return $this
      */
     public function removeRole(): self
     {
@@ -418,6 +444,8 @@ class Svg
      *
      * @param string      $title Texte du titre
      * @param null|string $id    ID du <title>. Si null, un id sera généré au rendu.
+     *
+     * @return $this
      */
     public function setTitle(string $title, ?string $id = null): self
     {
@@ -430,6 +458,8 @@ class Svg
 
     /**
      * Supprime le titre accessible (<title> + aria-labelledby si géré par la classe).
+     *
+     * @return $this
      */
     public function removeTitle(): self
     {
@@ -484,6 +514,8 @@ class Svg
      * @param \DOMElement $element Élément DOM à modifier
      * @param string      $name    Nom d'attribut
      * @param null|string $value   Valeur (null ou vide => suppression)
+     *
+     * @return void
      */
     private function setAttribute(\DOMElement $element, string $name, ?string $value): void
     {

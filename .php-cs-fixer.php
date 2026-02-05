@@ -29,6 +29,11 @@ return $config
 
         'phpdoc_summary' => false,
         'phpdoc_to_comment' => false,
+        'no_superfluous_phpdoc_tags' => false,
+        'phpdoc_no_empty_return' => false,
+        'phpdoc_trim' => true,
+        'phpdoc_separation' => true,
+        'phpdoc_trim_consecutive_blank_line_separation' => true,
 
         
     ])

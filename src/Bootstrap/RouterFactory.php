@@ -8,8 +8,17 @@ use League\Route\Router;
 use League\Route\Strategy\ApplicationStrategy;
 use Psr\Container\ContainerInterface;
 
+/**
+ * Fabrique du routeur de l'application.
+ */
 final class RouterFactory
 {
+    /**
+     * @param ContainerInterface $container
+     * @param string             $routesFile
+     *
+     * @return Router
+     */
     public static function create(ContainerInterface $container, string $routesFile): Router
     {
         $strategy = new ApplicationStrategy();

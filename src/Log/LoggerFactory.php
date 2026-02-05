@@ -9,6 +9,9 @@ use Monolog\Level;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Fabrique de logger Monolog.
+ */
 final class LoggerFactory
 {
     public function __construct(
@@ -17,6 +20,9 @@ final class LoggerFactory
         private readonly Level $level = Level::Debug,
     ) {}
 
+    /**
+     * @return LoggerInterface
+     */
     public function create(): LoggerInterface
     {
         $log = new Logger($this->name);

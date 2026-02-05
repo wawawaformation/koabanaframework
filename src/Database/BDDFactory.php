@@ -19,6 +19,8 @@ class BDDFactory
     /**
      * REtourne une connexion PDO à la BDD
      *
+     * @return MyPDO
+     *
      * @throws \RuntimeException
      */
     public function getConnection(): MyPDO

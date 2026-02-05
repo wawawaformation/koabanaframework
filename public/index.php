@@ -35,7 +35,7 @@ ErrorHandler::register($logger);
 $router = RouterFactory::create($container, dirname(__DIR__).'/config/routes.php');
 
 // Création du noyau HTTP de l'application
-$kernel = new Kernel($router);
+$kernel = new Kernel($router, $logger);
 
 // Gestion de la requête HTTP courante
 $request = ServerRequest::fromGlobals();

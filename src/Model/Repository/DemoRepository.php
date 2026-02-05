@@ -4,18 +4,22 @@ declare(strict_types=1);
 
 namespace Koabana\Model\Repository;
 
+/**
+ * Repository de démonstration (données en mémoire).
+ */
 final class DemoRepository extends AbstractRepository
 {
     /**
-     * Summary of findAll
+     * Summary of findAllUsers
      *
-     * @return array <int, array<string, mixed>>
+     * @return array{id: int, name: string}[]
      */
-    public function findAll(): array
+    public function findAllUsers(): array
     {
-        $pdo = $this->bddFactory->getConnection();
-        $stmt = $pdo->query('SELECT * FROM users');
-
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return [
+            ['id' => 1, 'name' => 'Alice'],
+            ['id' => 2, 'name' => 'Bob'],
+            ['id' => 3, 'name' => 'Charlie'],
+        ];
     }
 }

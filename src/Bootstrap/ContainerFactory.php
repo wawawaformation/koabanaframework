@@ -7,6 +7,9 @@ namespace Koabana\Bootstrap;
 use DI\ContainerBuilder;
 use Psr\Container\ContainerInterface;
 
+/**
+ * Fabrique du conteneur de dépendances (PHP-DI).
+ */
 final class ContainerFactory
 {
     /**
@@ -14,6 +17,8 @@ final class ContainerFactory
      *
      * @param string               $definitionsFile Chemin vers le fichier containers.php
      * @param array<string, mixed> $overrides       Définitions qui surchargent celles du fichier (optionnel)
+     *
+     * @return ContainerInterface
      */
     public static function create(string $definitionsFile, array $overrides = []): ContainerInterface
     {
