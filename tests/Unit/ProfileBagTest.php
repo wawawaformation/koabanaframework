@@ -8,9 +8,15 @@ use Koabana\Http\Session\ProfileBag;
 use Koabana\Http\Session\SessionBag;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class ProfileBagTest extends TestCase
 {
     private ProfileBag $profileBag;
+
     /** @var array<string, mixed> */
     private array $sessionData = [];
 

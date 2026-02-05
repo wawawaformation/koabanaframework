@@ -4,13 +4,19 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use Koabana\Controller\DemoController;
-use Koabana\Model\Repository\DemoRepository;
-use Koabana\Database\BDDFactory;
 use GuzzleHttp\Psr7\ServerRequest;
+use Koabana\Controller\DemoController;
+use Koabana\Database\BDDFactory;
+use Koabana\Model\Repository\DemoRepository;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class DemoControllerTest extends TestCase
 {
     private DemoController $controller;
@@ -19,10 +25,11 @@ final class DemoControllerTest extends TestCase
 
     protected function setUp(): void
     {
-        /** @var BDDFactory&\PHPUnit\Framework\MockObject\MockObject */
+        /** @var BDDFactory&MockObject */
         $bddFactory = $this->createMock(BDDFactory::class);
         $this->repository = new DemoRepository($bddFactory);
-        /** @var LoggerInterface&\PHPUnit\Framework\MockObject\MockObject */
+
+        /** @var LoggerInterface&MockObject */
         $logger = $this->createMock(LoggerInterface::class);
         $this->logger = $logger;
         $this->controller = new DemoController($this->repository, $this->logger);

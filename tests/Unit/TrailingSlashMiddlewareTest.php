@@ -4,12 +4,18 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use Koabana\Http\Middleware\TrailingSlashMiddleware;
-use GuzzleHttp\Psr7\ServerRequest;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\ServerRequest;
+use Koabana\Http\Middleware\TrailingSlashMiddleware;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Server\RequestHandlerInterface;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class TrailingSlashMiddlewareTest extends TestCase
 {
     private TrailingSlashMiddleware $middleware;
@@ -18,7 +24,8 @@ final class TrailingSlashMiddlewareTest extends TestCase
     protected function setUp(): void
     {
         $this->middleware = new TrailingSlashMiddleware();
-        /** @var RequestHandlerInterface&\PHPUnit\Framework\MockObject\MockObject */
+
+        /** @var MockObject&RequestHandlerInterface */
         $handler = $this->createMock(RequestHandlerInterface::class);
         $handler->method('handle')->willReturn(new Response(200, [], 'OK'));
         $this->handler = $handler;
@@ -71,4 +78,3 @@ final class TrailingSlashMiddlewareTest extends TestCase
         self::assertStringContainsString('sort=name', $location);
     }
 }
-

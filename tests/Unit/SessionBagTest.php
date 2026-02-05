@@ -7,9 +7,15 @@ namespace Tests\Unit;
 use Koabana\Http\Session\SessionBag;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class SessionBagTest extends TestCase
 {
     private SessionBag $sessionBag;
+
     /** @var array<string, mixed> */
     private array $data = [];
 
@@ -45,7 +51,7 @@ final class SessionBagTest extends TestCase
     {
         $this->sessionBag->set('key', 'value');
         self::assertTrue($this->sessionBag->has('key'));
-        
+
         $this->sessionBag->remove('key');
         self::assertFalse($this->sessionBag->has('key'));
     }
@@ -54,7 +60,7 @@ final class SessionBagTest extends TestCase
     {
         $this->sessionBag->set('key1', 'value1');
         $this->sessionBag->set('key2', 'value2');
-        
+
         $all = $this->sessionBag->all();
         self::assertEquals(['key1' => 'value1', 'key2' => 'value2'], $all);
     }
@@ -63,7 +69,7 @@ final class SessionBagTest extends TestCase
     {
         $this->sessionBag->set('key1', 'value1');
         $this->sessionBag->set('key2', 'value2');
-        
+
         $this->sessionBag->clear();
         self::assertEquals([], $this->sessionBag->all());
     }
@@ -89,7 +95,7 @@ final class SessionBagTest extends TestCase
         $this->sessionBag->set('int', 42);
         $this->sessionBag->set('array', ['a' => 'b']);
         $this->sessionBag->set('bool', true);
-        
+
         self::assertEquals('value', $this->sessionBag->get('string'));
         self::assertEquals(42, $this->sessionBag->get('int'));
         self::assertEquals(['a' => 'b'], $this->sessionBag->get('array'));

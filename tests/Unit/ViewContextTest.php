@@ -7,6 +7,11 @@ namespace Tests\Unit;
 use Koabana\View\ViewContext;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class ViewContextTest extends TestCase
 {
     private ViewContext $viewContext;
@@ -82,7 +87,7 @@ final class ViewContextTest extends TestCase
     public function testConfirmDeleteModal(): void
     {
         self::assertFalse($this->viewContext->isConfirmDeleteModalEnabled());
-        
+
         $this->viewContext->enableConfirmDeleteModal();
         self::assertTrue($this->viewContext->isConfirmDeleteModalEnabled());
     }
@@ -105,7 +110,7 @@ final class ViewContextTest extends TestCase
         $this->viewContext->start('content');
         echo 'Content';
         $this->viewContext->end('content');
-        
+
         $this->viewContext->addStyleSheet('style.css');
         $this->viewContext->enableConfirmDeleteModal();
 

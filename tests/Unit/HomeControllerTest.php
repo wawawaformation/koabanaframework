@@ -4,21 +4,28 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
+use GuzzleHttp\Psr7\ServerRequest;
 use Koabana\Controller\HomeController;
 use Koabana\Model\Repository\TestRepository;
-use GuzzleHttp\Psr7\ServerRequest;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseInterface;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class HomeControllerTest extends TestCase
 {
     private HomeController $controller;
 
     protected function setUp(): void
     {
-        /** @var TestRepository&\PHPUnit\Framework\MockObject\MockObject */
+        /** @var MockObject&TestRepository */
         $testRepository = $this->createMock(TestRepository::class);
         $testRepository->method('findAll')->willReturn([]);
-        
+
         $this->controller = new HomeController($testRepository);
     }
 
@@ -43,6 +50,6 @@ final class HomeControllerTest extends TestCase
         $request = new ServerRequest('GET', 'http://localhost/');
         $response = $this->controller->index($request, []);
 
-        self::assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $response);
+        self::assertInstanceOf(ResponseInterface::class, $response);
     }
 }

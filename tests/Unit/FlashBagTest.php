@@ -8,9 +8,15 @@ use Koabana\Http\Session\FlashBag;
 use Koabana\Http\Session\SessionBag;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class FlashBagTest extends TestCase
 {
     private FlashBag $flashBag;
+
     /** @var array<string, mixed> */
     private array $sessionData = [];
 
@@ -39,7 +45,7 @@ final class FlashBagTest extends TestCase
     {
         $this->flashBag->add('success', 'Message');
         $this->flashBag->get('success');
-        
+
         $messages = $this->flashBag->get('success');
         self::assertEquals([], $messages);
     }
@@ -49,7 +55,7 @@ final class FlashBagTest extends TestCase
         $this->flashBag->add('success', 'Success message');
         $this->flashBag->add('error', 'Error message');
         $this->flashBag->add('info', 'Info message');
-        
+
         $all = $this->flashBag->all();
         self::assertArrayHasKey('success', $all);
         self::assertArrayHasKey('error', $all);
@@ -60,9 +66,9 @@ final class FlashBagTest extends TestCase
     {
         $this->flashBag->add('success', 'Message 1');
         $this->flashBag->add('error', 'Message 2');
-        
+
         $this->flashBag->all();
-        
+
         $all = $this->flashBag->all();
         self::assertEquals([], $all);
     }
@@ -89,7 +95,7 @@ final class FlashBagTest extends TestCase
     {
         $this->flashBag->add('success', 'Message');
         $this->flashBag->clear();
-        
+
         self::assertFalse($this->flashBag->has('success'));
     }
 
