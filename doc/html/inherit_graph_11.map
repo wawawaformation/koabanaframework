@@ -1,0 +1,13 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,109,161,137"/>
+<area shape="rect" id="Node000001" href="$classKoabana_1_1Http_1_1Middleware_1_1CsrfMiddleware.html" title=" " alt="" coords="249,5,372,33"/>
+<area shape="poly" id="edge10_Node000000_Node000001" title=" " alt="" coords="114,98,157,70,208,43,251,31,247,34,210,48,160,74,117,102"/>
+<area shape="rect" id="Node000002" href="$classKoabana_1_1Http_1_1Middleware_1_1ErrorHandlerMiddleware.html" title=" " alt="" coords="221,57,400,85"/>
+<area shape="poly" id="edge11_Node000000_Node000002" title=" " alt="" coords="161,103,249,84,245,87,163,108"/>
+<area shape="rect" id="Node000003" href="$classKoabana_1_1Http_1_1Middleware_1_1SecurityHeadersMiddleware.html" title=" " alt="" coords="209,109,413,137"/>
+<area shape="poly" id="edge12_Node000000_Node000003" title=" " alt="" coords="176,121,211,122,206,124,177,126"/>
+<area shape="rect" id="Node000004" href="$classKoabana_1_1Http_1_1Middleware_1_1SessionMiddleware.html" title=" " alt="" coords="237,161,384,189"/>
+<area shape="poly" id="edge13_Node000000_Node000004" title=" " alt="" coords="162,138,249,160,244,162,162,144"/>
+<area shape="rect" id="Node000005" href="$classKoabana_1_1Http_1_1Middleware_1_1TrailingSlashMiddleware.html" title=" " alt="" coords="221,213,400,241"/>
+<area shape="poly" id="edge14_Node000000_Node000005" title=" " alt="" coords="116,144,160,172,210,198,246,213,241,213,208,203,157,177,115,149"/>
+</map>

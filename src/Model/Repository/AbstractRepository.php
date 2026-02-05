@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Koabana\Model\Repository;
 
 use Koabana\Database\BDDFactory;
+use Koabana\Database\QueryBuilder;
 use Koabana\Model\Entity\AbstractEntity;
 
 /**
@@ -29,6 +30,131 @@ abstract class AbstractRepository
         $row = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
         return $this->hydrateAll($row);
+    }
+
+    /**
+     * Trouve une entité par son ID
+     *
+     * @param int $id
+     *
+     * @return null|AbstractEntity
+     */
+    public function findById(int $id): ?object
+    {
+        $sql = 'SELECT * FROM '.$this->table.' WHERE id = :id';
+        $stmt = $this->statement($sql, ['id' => $id]);
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        return $row ? $this->hydrate($row) : null;
+    }
+
+    /**
+     * Crée une nouvelle entité en base de données
+     *
+     * @param AbstractEntity $entity
+     *
+     * @return int L'ID de l'entité créée
+     */
+    public function create(object $entity): int
+    {
+        $data = $this->extractData($entity);
+
+        // Exclut l'ID s'il est 0 ou non défini (auto_increment)
+        if (isset($data['id']) && ($data['id'] === 0 || $data['id'] === '0')) {
+            unset($data['id']);
+        }
+
+        $columns = \array_keys($data);
+        $placeholders = \array_map(fn ($col) => ':'.$col, $columns);
+
+        $sql = 'INSERT INTO '.$this->table
+            .' ('.implode(', ', $columns).')'
+            .' VALUES ('.implode(', ', $placeholders).')';
+
+        $stmt = $this->statement($sql, $data);
+
+        $id = (int) $this->bddFactory->getConnection()->lastInsertId();
+        $this->applyIdIfPossible($entity, $id);
+
+        return $id;
+    }
+
+    /**
+     * Met à jour une entité en base de données
+     *
+     * @param AbstractEntity $entity
+     *
+     * @return bool True si au moins une ligne a été affectée
+     */
+    public function update(object $entity): bool
+    {
+        $data = $this->extractData($entity);
+
+        if (!isset($data['id']) || !$data['id']) {
+            throw new \RuntimeException('Cannot update entity without ID');
+        }
+
+        $id = $data['id'];
+        unset($data['id']); // on exclut l'ID de la clause SET
+
+        if (empty($data)) {
+            return false;
+        }
+
+        $sets = \array_map(fn ($col) => $col.' = :'.$col, \array_keys($data));
+        $sql = 'UPDATE '.$this->table
+            .' SET '.implode(', ', $sets)
+            .' WHERE id = :id';
+
+        $data['id'] = $id;
+        $stmt = $this->statement($sql, $data);
+
+        return $stmt->rowCount() > 0;
+    }
+
+    /**
+     * Supprime une entité par son ID
+     *
+     * @param int $id
+     *
+     * @return bool True si au moins une ligne a été supprimée
+     */
+    public function delete(int $id): bool
+    {
+        $sql = 'DELETE FROM '.$this->table.' WHERE id = :id';
+        $stmt = $this->statement($sql, ['id' => $id]);
+
+        return $stmt->rowCount() > 0;
+    }
+
+    /**
+     * Supprime une entité par son objet
+     *
+     * @param AbstractEntity $entity
+     *
+     * @return bool True si au moins une ligne a été supprimée
+     */
+    public function deleteEntity(AbstractEntity $entity): bool
+    {
+        return $this->delete($entity->getId());
+    }
+
+    /**
+     * Crée un QueryBuilder pour construire des requêtes complexes
+     * 
+     * @example
+     *   $users = $repo->query()
+     *       ->where('age', '>', 18)
+     *       ->where('status', '=', 'active')
+     *       ->orderBy('name')
+     *       ->limit(10)
+     *       ->get();
+     * 
+     * @return QueryBuilder
+     */
+    public function query(): QueryBuilder
+    {
+        return new QueryBuilder($this->table, $this->bddFactory);
     }
 
     /**

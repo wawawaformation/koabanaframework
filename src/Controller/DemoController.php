@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace Koabana\Controller;
 
 use GuzzleHttp\Psr7\Response;
+use Koabana\Form\EmailInput;
+use Koabana\Form\Form;
+use Koabana\Form\TextInput;
+use Koabana\Form\Textarea;
 use Koabana\Http\Session\FlashBag;
 use Koabana\Model\Repository\DemoRepository;
 use Psr\Http\Message\ResponseInterface;
@@ -29,11 +33,34 @@ final class DemoController
      */
     public function __invoke(ServerRequestInterface $request, array $args): ResponseInterface
     {
-        $html = '<h1>Koabana</h1><p>It works.</p>';
+        $html = '<h1>Koabana Framework</h1>';
+        $html .= '<p>Framework PHP minimal et autonome basé sur PSR-7/PSR-15.</p>';
 
         $users = $this->demoRepository->findAllUsers();
 
         $this->logger->info('Fetching users from database');
+
+        $html .= '<h2>Routes de démo</h2>';
+        $html .= '<ul>';
+        $html .= '<li><a href="/">Accueil</a></li>';
+        $html .= '<li><a href="/demo">Démo (cette page)</a></li>';
+        $html .= '<li><a href="/demo/form">Formulaire CSRF</a></li>';
+        $html .= '<li><a href="/demo/form-demo">Formulaire complet (validation)</a></li>';
+        $html .= '<li><a href="/demo/tests">Tests Bags (Sessions, Flash, Profile)</a></li>';
+        $html .= '<li><a href="/demo/session/set">Gestion sessions</a></li>';
+        $html .= '<li><a href="/demo/profile/login">Gestion profil</a></li>';
+        $html .= '<li><a href="/demo/flash/add">Messages flash</a></li>';
+        $html .= '</ul>';
+
+        $html .= '<h2>Utilisateurs de la BDD</h2>';
+        $html .= '<ul>';
+        foreach ($users as $user) {
+            $name = htmlspecialchars($user['name'], ENT_QUOTES, 'UTF-8');
+            $html .= '<li>' . $name . '</li>';
+        }
+        $html .= '</ul>';
+
+        $html .= '<style>body { font-family: sans-serif; margin: 2rem; } h1 { color: #1976d2; } a { color: #1976d2; text-decoration: none; } a:hover { text-decoration: underline; } li { margin: 0.5rem 0; }</style>';
 
         return new Response(
             200,
@@ -313,5 +340,100 @@ final class DemoController
         }
 
         return new Response(302, ['Location' => '/demo/tests']);
+    }
+
+    /**
+     * Démontre l'utilisation du formulaire
+     *
+     * @return ResponseInterface
+     */
+    public function formDemo(ServerRequestInterface $request): ResponseInterface
+    {
+        $form = new Form('contact');
+        
+        $form->add(new TextInput('name', [
+            'required' => true,
+            'minLength' => 2,
+            'maxLength' => 100,
+            'class' => 'form-control',
+            'placeholder' => 'Votre nom',
+        ]));
+
+        $form->add(new EmailInput('email', [
+            'required' => true,
+            'email' => true,
+            'class' => 'form-control',
+            'placeholder' => 'Votre email',
+        ]));
+
+        $form->add(new Textarea('message', [
+            'required' => true,
+            'minLength' => 10,
+            'maxLength' => 500,
+            'class' => 'form-control',
+            'rows' => 5,
+            'placeholder' => 'Votre message',
+        ]));
+
+        // Récupère le token CSRF
+        $csrfToken = $request->getAttribute('csrf_token', '');
+        $form->setCsrfToken($csrfToken);
+
+        // Hydrate depuis POST si présent
+        $method = $request->getMethod();
+        $errors = [];
+
+        if ($method === 'POST') {
+            $data = (array)$request->getParsedBody();
+            $form->fill($data);
+
+            if ($form->validate()) {
+                $this->logger->info('Formulaire valide', $form->getData());
+                return new Response(200, ['Content-Type' => 'text/html; charset=utf-8'], 
+                    '<h1>✅ Formulaire reçu avec succès !</h1><pre>' . 
+                    htmlspecialchars(json_encode($form->getData(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), ENT_QUOTES, 'UTF-8') .
+                    '</pre><a href="/demo/form-demo">Retour au formulaire</a>');
+            }
+            
+            $errors = $form->errors();
+            $this->logger->warning('Erreurs de validation', $errors);
+        }
+
+        // Génère le HTML du formulaire
+        $html = '<h1>Formulaire de démonstration</h1>';
+        $html .= $form->open('/demo/form-demo', 'POST', ['class' => 'form-demo']);
+
+        foreach ($form->getFields() as $fieldName => $field) {
+            $html .= '<div class="form-group">';
+            $html .= '<label for="' . $fieldName . '">' . ucfirst($fieldName) . '</label>';
+            $html .= $field->render();
+            
+            if (isset($errors[$fieldName])) {
+                $html .= '<div class="errors">';
+                foreach ($errors[$fieldName] as $error) {
+                    $html .= '<p class="error">' . htmlspecialchars($error, ENT_QUOTES, 'UTF-8') . '</p>';
+                }
+                $html .= '</div>';
+            }
+            $html .= '</div>';
+        }
+
+        $html .= $form->csrf();
+        $html .= '<button type="submit" class="btn">Envoyer</button>';
+        $html .= $form->close();
+
+        $html .= '<style>
+            .form-demo { max-width: 500px; }
+            .form-group { margin: 1rem 0; }
+            label { display: block; font-weight: bold; margin-bottom: 0.5rem; }
+            input, textarea, select { width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; }
+            textarea { resize: vertical; }
+            .errors { color: #d32f2f; margin-top: 0.5rem; }
+            .error { margin: 0.25rem 0; font-size: 0.9rem; }
+            .btn { background: #1976d2; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 4px; cursor: pointer; margin-top: 1rem; }
+            .btn:hover { background: #1565c0; }
+        </style>';
+
+        return new Response(200, ['Content-Type' => 'text/html; charset=utf-8'], $html);
     }
 }

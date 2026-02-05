@@ -1,8 +1,8 @@
 {
   "name": "koabana/framework",
-  "description": "Koabana PHP Framework",
-  "license": "proprietary",
-  "version": "0.0.1",
+  "description": "Koabana PHP Framework - Minimal and autonomous PSR-7/PSR-15 framework",
+  "license": "GPL-3.0-only",
+  "version": "0.9.0",
   "autoload": {
     "psr-4": {
       "Koabana\\": "src/"

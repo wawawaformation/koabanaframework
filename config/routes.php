@@ -5,6 +5,8 @@ return [
     ['GET', '/demo', \Koabana\Controller\DemoController::class],
     ['GET', '/demo/form', [\Koabana\Controller\DemoController::class, 'form']],
     ['POST', '/demo/submit', [\Koabana\Controller\DemoController::class, 'submit']],
+    ['GET', '/demo/form-demo', [\Koabana\Controller\DemoController::class, 'formDemo']],
+    ['POST', '/demo/form-demo', [\Koabana\Controller\DemoController::class, 'formDemo']],
     ['GET', '/demo/tests', [\Koabana\Controller\DemoController::class, 'testBags']],
     ['GET', '/demo/session/set', [\Koabana\Controller\DemoController::class, 'sessionSet']],
     ['GET', '/demo/session/view', [\Koabana\Controller\DemoController::class, 'sessionView']],
